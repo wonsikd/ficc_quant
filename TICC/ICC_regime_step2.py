@@ -184,10 +184,10 @@ if __name__ == '__main__':
     print(all_index_data.columns)
 
 
-    rebalance_day_list=pd.date_range('2013-12-31', '2022-12-01', freq='m') # 리밸런싱을 하는 날짜입니다. 매달 리밸런싱을 진행합니다.
+    rebalance_day_list=pd.date_range('2013-12-31', '2022-12-01', freq='2m') # 리밸런싱을 하는 날짜입니다. 매달 리밸런싱을 진행합니다.
 
 
-    generate_weight(rebalance_day_list, all_index_data, profit_data,window_size=5, regime_split=3)
+    generate_weight(rebalance_day_list, all_index_data, profit_data,window_size=7, regime_split=3)
 
 
 
