@@ -5,7 +5,7 @@ import warnings
 import pandas as pd
 from scipy.optimize import minimize
 from typing import List
-import multiprocessing
+
 #warnings.filterwarnings(action='ignore')
 
 def obj_sharpe(weights, returns, covmat):
@@ -112,7 +112,7 @@ def generate_weight(rebalance_day_list,all_index_data,profit_data,window_size = 
         # 현재 국면과 동일한 과거 국면들만 모아서 따로 past_profit_data_merge라는 데이터프레임에 저장해줍니다.
         past_profit_data_merge = past_profit_data_merge.loc[past_profit_data_merge.regime == now_regime]
 
-        ###### 이제부터는 해당 국면의 과거 자료를 통해 MVO 최적화를 해주는 과정입니다.
+        ###### 이제부터는 해당 국면의 과거 자료를 통해 MVO(risk parity) 최적화를 해주는 과정입니다.
 
         #수익률 데이터프레임에서 주요 자산군의 수익률자료만 빼와 따로 저장해줍니다.
 
@@ -140,13 +140,13 @@ def generate_weight(rebalance_day_list,all_index_data,profit_data,window_size = 
         #최종적으로 저장된 weight값을 weight_pd에 저장해줍니다.
         weight_mvo = res['x']
 
-
+        #### 밑 코드는 risk parity 코드입니다.
         # Get covariance.
         covariance_matrix = get_covariances(data)
         # Get optimum weights.
         weight = _get_opt_weights(covariance_matrix)
         weight = list(np.array(weight))
-
+        ###########
 
 
         if rebalance_day_index == 0:
@@ -162,8 +162,8 @@ def generate_weight(rebalance_day_list,all_index_data,profit_data,window_size = 
     weight_pd_mvo.columns = data_columns
     weight_pd.index = rebalance_day_list
     weight_pd_mvo.index = rebalance_day_list
-    weight_pd.to_excel('weight_pd_risk.xlsx')
-    weight_pd_mvo.to_excel('weight_pd_mvo.xlsx')
+    weight_pd.to_excel('weight_pd_risk.xlsx') #리스크패리티
+    weight_pd_mvo.to_excel('weight_pd_mvo.xlsx') #mvo
 
     return weight_pd,weight_pd_mvo
 
